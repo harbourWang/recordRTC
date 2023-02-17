@@ -23,7 +23,9 @@ cc.Class({
             numberOfAudioChannels: 1,
             checkForInactiveTracks: false,
             bufferSize: 4096,
-            recorderType: StereoAudioRecorder
+            recorderType: StereoAudioRecorder,
+            sampleRate:16000,
+            // audio
         };
 
         let microphone = null;
@@ -51,6 +53,14 @@ cc.Class({
             //二进制数据
             let recordedBlob = this._recordRTC.getBlob();
 
+            //
+            let file = new File([recordedBlob], this.getFileName('wav'), {
+                type: 'audio/wav'
+            });
+            
+            invokeSaveAsDialog(file); // 该方法在recorderRTC.js中已有
+
+
             //base64格式数据
             this._recordRTC.getDataURL((dataURL) => {
 
@@ -74,6 +84,28 @@ cc.Class({
         }).catch((error) => {
             console.log("获取麦克风失败回调", error)
         })
+    },
+
+
+    getRandomString() {
+        if (window.crypto && window.crypto.getRandomValues && navigator.userAgent.indexOf('Safari') === -1) {
+            var a = window.crypto.getRandomValues(new Uint32Array(3)),
+                token = '';
+            for (var i = 0, l = a.length; i < l; i++) {
+                token += a[i].toString(36);
+            }
+            return token;
+        } else {
+            return (Math.random() * new Date().getTime()).toString(36).replace(/\./g, '');
+        }
+    },
+    // 文件名
+    getFileName(fileExtension) {
+        var d = new Date();
+        var year = d.getFullYear();
+        var month = d.getMonth();
+        var date = d.getDate();
+        return 'RecordRTC-' + year + month + date + '-' + '.' + fileExtension;
     }
 
 

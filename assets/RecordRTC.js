@@ -2331,6 +2331,7 @@ function StereoAudioRecorder(mediaStream, config) {
     }
 
     if (context.createJavaScriptNode) {
+        console.log("numberOfAudioChannels     " + numberOfAudioChannels)
         jsAudioNode = context.createJavaScriptNode(bufferSize, numberOfAudioChannels, numberOfAudioChannels);
     } else if (context.createScriptProcessor) {
         jsAudioNode = context.createScriptProcessor(bufferSize, numberOfAudioChannels, numberOfAudioChannels);
